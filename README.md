@@ -11,9 +11,10 @@ If you are bored you can find some random screenshots from prnt.sc
 Python https://www.python.org/
 
 # Installation
-1. Make new folder
-2. Put main.exe into a folder
-3. Run main.exe
+1. Download main.exe from latest release
+2. Make new folder
+3. Put main.exe into a folder
+4. Run main.exe
 
 
 
