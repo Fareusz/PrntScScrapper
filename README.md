@@ -5,6 +5,7 @@ If you are bored you can find some random screenshots from prnt.sc
 
 # Features
 Saving screenshots
+Open in Browser at hit
 
 # Requirements
 Python https://www.python.org/
