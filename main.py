@@ -1,3 +1,4 @@
+import configparser
 import random, string, webbrowser, cloudscraper, requests, urllib.request, os
 from bs4 import BeautifulSoup
 from tkinter import messagebox
@@ -6,12 +7,18 @@ from datetime import datetime
 
 # The creator is not responsible for the screenshots found by this script!!!
 
-new = 1
+config = configparser.ConfigParser()
+config.read('config.ini')
+cmain = config["main"]
 
+domain = cmain["domain"]
+ilznakow = int(cmain["length"])
+
+
+new = 1
 root = tk.Tk()
 root.title("PrntScScapper by Fareusz")
 root.geometry("500x250")
-
 
 def openweb(link):
     webbrowser.open(link, new=new)
@@ -35,8 +42,8 @@ def on_closing():
 def FindLinkPrnt():
     found = 0
     while found == 0:
-        id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
-        URL = "https://prnt.sc/" + str(id)
+        id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=ilznakow))
+        URL = f"https://{domain}/" + str(id)
         page = scraper.get(URL)
         soup = BeautifulSoup(page.text, "html.parser")
         results = soup.find(class_="no-click screenshot-image")
