@@ -1,11 +1,13 @@
-import configparser
-import random, string, webbrowser, cloudscraper, requests, urllib.request, os
+import _tkinter
+import random, string, webbrowser, cloudscraper, requests, urllib.request, os, configparser
+import time
 from bs4 import BeautifulSoup
 from tkinter import messagebox
 import tkinter as tk
 from datetime import datetime
 
 # The creator is not responsible for the screenshots found by this script!!!
+fontcs=('Comic Sans MS', 10, 'bold italic')
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -40,6 +42,7 @@ def on_closing():
 
 
 def FindLinkPrnt():
+    tic = time.perf_counter()
     found = 0
     while found == 0:
         id = ''.join(random.choices(string.ascii_lowercase + string.digits, k=ilznakow))
@@ -55,10 +58,10 @@ def FindLinkPrnt():
         if '//st.prntscr.com/2021/10/22/2139/img/0_173a7b_211be8ff.png' in source:
             print('Unknown link.. skipping...' + str(id))
             continue
-        if 'https://i.imgur.com/N2t4s73.png' in source:
+        if '//i.imgur.com/N2t4s73.png' in source:
             print('Unknown link.. skipping...' + str(id))
             continue
-        if 'https://i.imgur.com/removed.png' in source:
+        if '//i.imgur.com/removed.png' in source:
             print('Unknown link.. skipping...' + str(id))
             continue
 
@@ -91,29 +94,38 @@ def FindLinkPrnt():
         urllib.request.install_opener(opener)
         filename = 'image.jpg'
         image_url = source
-        urllib.request.urlretrieve(image_url, filename)
+        try:
+            urllib.request.urlretrieve(image_url, filename)
+        except urllib.error.HTTPError:
+            print('Your request got blocked :( Try Again!')
+        except _tkinter.TclError:
+            print('There was an error. Try again.')
         root2 = tk.Tk()
-
+        root2.title(str(URL))
         def next():
             root2.destroy()
             FindLinkPrnt()
 
         img = tk.PhotoImage(master=root2, file="image.jpg")
-        button3 = tk.Button(root2, width=2, height=2, text='Next!', font='ComicSans', bg='black', fg='green', padx=10,
+        button3 = tk.Button(root2, width=2, height=2, text='Next!', font=fontcs, bg='black', fg='green', padx=10,
                             command=next)
-        button2 = tk.Button(root2, width=2, height=2, text='Save!', font='ComicSans', bg='black', fg='green', padx=10,
+        button2 = tk.Button(root2, width=2, height=2, text='Save!', font=fontcs, bg='black', fg='green', padx=10,
                             command=rename)
         button2.pack()
         button3.pack()
-        label = tk.Label(root2, image=img)
-        label.pack()
+        Aimage = tk.Label(root2, image=img)
+        Aimage.pack()
+        tac = time.perf_counter()
+        BLabel = tk.Label(root2, text=f"Found and downloaded image in {tac - tic:0.4f} seconds")
+        BLabel.pack()
+        root2.iconbitmap('icon.ico')
         root2.mainloop()
 
 
 scraper = cloudscraper.create_scraper()
 resultList = list()
 
-tk.Button(root, width=50, height=10, text='Get Link', font='ComicSans', bg='black', fg='green', padx=10,
+tk.Button(root, width=50, height=10, text='Get Link', font=fontcs, bg='black', fg='green', padx=10,
           command=FindLinkPrnt).place(x=10, y=10)
 
 brwser = tk.IntVar()
@@ -121,4 +133,5 @@ c = tk.Checkbutton(root, text="Open in Browser at hit", variable=brwser, onvalue
 c.place(x=200, y=205)
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
+root.iconbitmap('icon.ico')
 root.mainloop()
